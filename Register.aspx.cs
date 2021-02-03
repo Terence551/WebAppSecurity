@@ -67,7 +67,7 @@ namespace WebAppSecurity
                 }
                 if (Regex.IsMatch(tb_fname.Text, "^[a-zA-Z]+$") != true)
                 {
-                    lb_fname.Text = "Invalid name!";
+                    lb_fname.Text = "Invalid First name!";
                     lb_fname.ForeColor = Color.Red;
                     error += 1;
                 }
@@ -80,7 +80,7 @@ namespace WebAppSecurity
                 }
                 if (Regex.IsMatch(tb_lname.Text, "^[a-zA-Z]+$") != true)
                 {
-                    lb_lname.Text = "Invalid name!";
+                    lb_lname.Text = "Invalid Last name!";
                     lb_lname.ForeColor = Color.Red;
                     error += 1;
                 }
@@ -197,7 +197,7 @@ namespace WebAppSecurity
                 ConfigurationManager.ConnectionStrings["190672BAppSecurity"]
                 .ConnectionString;
             SqlConnection con = new SqlConnection(UserconDB);
-            string sql ="INSERT INTO Userzd VALUES(@Id,@Firstname,@Lastname,@Creditcard,@Email,@PasswordHash,@PasswordSalt,@Dob,@IV,@Key)";
+            string sql ="INSERT INTO Userzd VALUES(@Id,@Firstname,@Lastname,@Creditcard,@Email,@PasswordHash,@PasswordSalt,@Dob,@IV,@Key,@LoggedOut)";
             SqlCommand cmd = new SqlCommand(sql, con);
             cmd.Parameters.AddWithValue("@Id", Guid.NewGuid().ToString());
             cmd.Parameters.AddWithValue("@Firstname", tb_fname.Text);
@@ -209,6 +209,7 @@ namespace WebAppSecurity
             cmd.Parameters.AddWithValue("@Dob", tb_dob.Text);
             cmd.Parameters.AddWithValue("@IV", Convert.ToBase64String(IV));
             cmd.Parameters.AddWithValue("@Key", Convert.ToBase64String(Key));
+            cmd.Parameters.AddWithValue("@LoggedOut", 0);
             try
             {
                 con.Open();
@@ -216,7 +217,7 @@ namespace WebAppSecurity
                 if (result == 1)
                 {
                     lb_finalmsg.Text = "Completed";
-                    //Response.Redirect("shop");
+                    Response.Redirect("~/", false);
                 }
                 else
                 {

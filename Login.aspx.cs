@@ -54,6 +54,33 @@ namespace WebAppSecurity
                 throw new Exception(ex.ToString());
             }
         }
+
+        // lockout
+        protected void putLogDB(int dbLog, string email)
+        {
+            string UserconDB = System.Configuration.
+                ConfigurationManager.ConnectionStrings["190672BAppSecurity"]
+                .ConnectionString;
+            SqlConnection connection = new SqlConnection(UserconDB);
+            string sql = "UPDATE Userzd SET LoggedOut=@Logged WHERE Email=@Email";
+            SqlCommand command = new SqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@Email", email);
+            command.Parameters.AddWithValue("@Logged", dbLog);
+            try
+            {
+                connection.Open();
+                int result = command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
         protected void LoginClick(object sender, EventArgs e)
         {
             bool validate = ValidateInput();
@@ -64,27 +91,54 @@ namespace WebAppSecurity
                 SHA512Managed hashing = new SHA512Managed();
                 string dbHash = getDBHash(email);
                 string dbSalt = getDBSalt(email);
-                Console.WriteLine("Test");
 
                 try
                 {
-
-                    Console.WriteLine("Test");
                     if (dbSalt != null && dbSalt.Length > 0 && dbHash != null && dbHash.Length > 0)
                     {
-
-                        Console.WriteLine("Test");
                         string pwdWithSalt = pwd + dbSalt;
                         byte[] hashWithSalt = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwdWithSalt));
                         string pwdHash = Convert.ToBase64String(hashWithSalt);
                         if (pwdHash.Equals(dbHash))
-                        { 
-                            Session["Logged"] = tb_email.Text
-                            Response.Redirect("~/", false); 
+                        {
+                            // lockout
+                            int dbLog = getDBLogged(email);
+                            if (dbLog >= 3)
+                            {
+                                lb_finalmsg.Text = "THIS ACCOUNT IS LOCKED!";
+                            }
+                            else
+                            {
+                                // session
+                                Session["LoggedIn"] = tb_email.Text.ToString();
+                                // cookie
+                                string guid = Guid.NewGuid().ToString();
+                                Session["AuthToken"] = guid;
+                                Response.Cookies.Add(new HttpCookie("AuthToken", guid));
+                                // lockout
+                                putLogDB(0, email);
+                                Response.Redirect("shop", false);
+
+                            }
                         }
                         else
                         {
-                            lb_finalmsg.Text = "Email/Password is wrong!";
+                            //lockout
+                            int dbLog = getDBLogged(email);
+                            dbLog += 1;
+
+                            putLogDB(dbLog, email);
+
+                            int leftlog = 3-dbLog;
+                            if(leftlog <= 0)
+                            {
+                                lb_finalmsg.Text = "This account has been locked";
+                            }
+                            else
+                            {
+                                lb_finalmsg.Text = "Email/Password is wrong! " + leftlog + " try left";
+                            }
+
                         }
                     }
                 }
@@ -97,7 +151,40 @@ namespace WebAppSecurity
             
         }
 
+        protected int getDBLogged(string email)
+        {
+            int getLogged = 0;
+            string UserconDB = System.Configuration.
+                ConfigurationManager.ConnectionStrings["190672BAppSecurity"]
+                .ConnectionString;
+            SqlConnection connection = new SqlConnection(UserconDB);
+            string sql = "SELECT LoggedOut FROM Userzd WHERE Email=@Email";
+            SqlCommand command = new SqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@Email", email);
+            try
+            {
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        if (reader["LoggedOut"] != null)
+                        {
+                            if (reader["LoggedOut"] != DBNull.Value)
+                            {
+                                getLogged = Convert.ToInt32(reader["LoggedOut"]);
+                            }
+                        }
+                    }
+                }
 
+            }
+            catch(Exception ex) { throw new Exception(ex.ToString()); }
+            finally { }
+
+
+            return getLogged;
+        }
 
         protected string getDBHash(string email)
         {
