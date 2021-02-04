@@ -159,7 +159,9 @@ namespace WebAppSecurity
             else
             {
                 if (validateC != true)
+                {
                     lb_finalmsg.Text = "Bot detected!";
+                }
                 else
                 {
                     lb_finalmsg.Text = "Input have error";

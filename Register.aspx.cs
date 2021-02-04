@@ -26,7 +26,10 @@ namespace WebAppSecurity
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if(!IsPostBack)
             calendar.Visible = false;
+            eye_password.Visible = true;
+            eye_confirmpassword.Visible = true;
         }
         // calendarBtn
         protected void calendarCall(object sender, EventArgs e)
@@ -34,10 +37,14 @@ namespace WebAppSecurity
             if (calendar.Visible)
             {
                 calendar.Visible = false;
+                eye_password.Visible = true;
+                eye_confirmpassword.Visible = true;
             }
             else
             {
                 calendar.Visible = true;
+                eye_password.Visible = false;
+                eye_confirmpassword.Visible = false;
             }
             calendar.Attributes.Add("style", "position:absolute");
         }
@@ -46,6 +53,8 @@ namespace WebAppSecurity
         {
             tb_dob.Text = calendar.SelectedDate.ToString("dd/MM/yyyy");
             calendar.Visible = false;
+            eye_password.Visible = true;
+            eye_confirmpassword.Visible = true;
         }
         // calendar_render
         protected void calendar_render(object sender, DayRenderEventArgs e)

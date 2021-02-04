@@ -150,7 +150,7 @@
             <table>
                 <tr >
                     <td>   
-                        <asp:Label runat="server" Text="First Name"></asp:Label>
+                        <asp:Label runat="server" Text="First Name" ></asp:Label>
                     </td>
                     <td>
                         <asp:TextBox 
@@ -208,7 +208,9 @@
                             ID="tb_dob" 
                             runat="server" 
                             Enabled="false" Width="128px"></asp:TextBox>
-                        <i id="calenderBtn" runat="server" class="glyphicon glyphicon-calendar" onserverclick="calendarCall"></i>
+                        <a id="calenderBtn" onserverclick="calendarCall" runat="server" class="btn w3-hover-blue">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </a>
                         <asp:Calendar
                             OnDayRender="calendar_render"
                             OnSelectionChanged="calendar_select"
@@ -257,6 +259,7 @@
                             runat="server" 
                             OnInput="javascript:finalCheck()"></asp:TextBox>
                         <span 
+                            runat="server"
                             id="eye_password" 
                             class=" glyphicon glyphicon-eye-open w3-right" 
                             onclick="javascript:showPass('password')" 
@@ -280,6 +283,7 @@
                             OnInput="javascript:finalCheck()"
                             TextMode="Password"></asp:TextBox>
                         <span 
+                            runat="server"
                             id="eye_confirmpassword" 
                             class="glyphicon glyphicon-eye-open w3-right" 
                             onclick="javascript:showPass('confirm')" 

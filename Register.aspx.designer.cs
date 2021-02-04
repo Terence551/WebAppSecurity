@@ -93,7 +93,7 @@ namespace WebAppSecurity
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl calenderBtn;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor calenderBtn;
 
         /// <summary>
         /// calendar control.
@@ -141,6 +141,15 @@ namespace WebAppSecurity
         protected global::System.Web.UI.WebControls.TextBox tb_pwd;
 
         /// <summary>
+        /// eye_password control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl eye_password;
+
+        /// <summary>
         /// lb_pwd control.
         /// </summary>
         /// <remarks>
@@ -157,6 +166,15 @@ namespace WebAppSecurity
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox tb_confirmpassword;
+
+        /// <summary>
+        /// eye_confirmpassword control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl eye_confirmpassword;
 
         /// <summary>
         /// lb_confirmpassword control.
