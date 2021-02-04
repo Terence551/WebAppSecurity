@@ -211,9 +211,11 @@ namespace WebAppSecurity
                 }
 
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception(ex.ToString());
+                lb_finalmsg.Text = "There is an error with the submission, please try again!";
+                return false;
+                
             }
         }
 
@@ -252,9 +254,9 @@ namespace WebAppSecurity
                     lb_finalmsg.Text = "Failed AddUser";
                 }
             }
-            catch (Exception ex)
+            catch 
             {
-                throw new Exception(ex.ToString());
+                lb_finalmsg.Text = "Failed AddUser";
             }
             finally
             {
@@ -303,9 +305,9 @@ namespace WebAppSecurity
                 byte[] plainText = Encoding.UTF8.GetBytes(data); 
                 cipherText = encryptTransform.TransformFinalBlock(plainText, 0, plainText.Length);
             }
-            catch (Exception ex) 
-            { 
-                throw new Exception(ex.ToString()); 
+            catch  
+            {
+                lb_finalmsg.Text = "Failed to encrypt";
             }
             finally { }
             return cipherText;

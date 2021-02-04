@@ -54,9 +54,10 @@ namespace WebAppSecurity
                 }
 
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception(ex.ToString());
+                lb_finalmsg.Text = "There is an error with the submission, please try again!";
+                return false;
             }
         }
 
@@ -76,9 +77,9 @@ namespace WebAppSecurity
                 connection.Open();
                 int result = command.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception(ex.ToString());
+                lb_finalmsg.Text = "Failed to update lockout";
             }
             finally
             {
@@ -97,6 +98,7 @@ namespace WebAppSecurity
                 string email = HttpUtility.HtmlEncode(tb_email.Text);
                 string pwd = HttpUtility.HtmlEncode(tb_pwd.Text);
                 SHA512Managed hashing = new SHA512Managed();
+                // hash and salt retrieve from db
                 string dbHash = getDBHash(email);
                 string dbSalt = getDBSalt(email);
 
@@ -109,7 +111,7 @@ namespace WebAppSecurity
                         string pwdHash = Convert.ToBase64String(hashWithSalt);
                         if (pwdHash.Equals(dbHash))
                         {
-                            // lockout
+                            // lockout retrieve from db
                             int dbLog = getDBLogged(email);
                             if (dbLog >= 3)
                             {
@@ -151,19 +153,16 @@ namespace WebAppSecurity
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw new Exception(ex.ToString());
-                }
+                catch { lb_finalmsg.Text = "Error in verifying account"; }
                 finally { }
             }
             else
             {
                 if (validateC != true)
-                    lb_finalmsg.Text = "Recaptcha might be wrong";
+                    lb_finalmsg.Text = "Bot detected!";
                 else
                 {
-                    lb_finalmsg.Text = "Recaptcha correct";
+                    lb_finalmsg.Text = "Input have error";
                 }
             }
             
@@ -198,7 +197,8 @@ namespace WebAppSecurity
                 }
 
             }
-            catch(Exception ex) { throw new Exception(ex.ToString()); }
+            catch
+            { lb_finalmsg.Text = "Error in accessing Database"; }
             finally { }
 
 
@@ -233,7 +233,7 @@ namespace WebAppSecurity
                     }
                 }
             }
-            catch (Exception ex) { throw new Exception(ex.ToString()); }
+            catch { lb_finalmsg.Text = "Error in accessing Database"; }
             finally { connection.Close(); }
             return gethash;
         }
@@ -268,10 +268,7 @@ namespace WebAppSecurity
                     } 
                 }
             }
-            catch (Exception ex) 
-            { 
-                throw new Exception(ex.ToString()); 
-            }
+            catch { lb_finalmsg.Text = "Error in accessing Database"; }
             finally 
             { 
                 connection.Close(); 
@@ -323,10 +320,8 @@ namespace WebAppSecurity
                 }
                 return result;
             }
-            catch (WebException ex)
-            {
-                throw ex;
-            }
+            catch { lb_finalmsg.Text = "Error in google captcha"; }
+            return false;
         }
 
 
