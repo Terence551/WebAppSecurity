@@ -14,6 +14,7 @@ using System.Net;
 using System.IO;
 using System.Web.Script.Serialization;
 using Newtonsoft.Json;
+using System.Data;
 
 namespace WebAppSecurity
 {
@@ -22,6 +23,31 @@ namespace WebAppSecurity
         protected void Page_Load(object sender, EventArgs e)
         {
 
+        }
+
+
+        // check email exist
+        public int CheckEmail(string email)
+        {
+            int result;
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["190672BAppSecurity"].ConnectionString);
+            DataTable dt = new DataTable();
+            con.Open();
+            string sql = "SELECT * FROM Userzd WHERE Email = @paraEmail";
+            SqlCommand cmd = new SqlCommand(sql, con);
+            cmd.Parameters.AddWithValue("@paraEmail", email);
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            sda.Fill(dt);
+            if (dt.Rows.Count < 1)
+            {
+                result = 1;
+            }
+            else
+            {
+                result = 0;
+            }
+            con.Close();
+            return result;
         }
         private bool ValidateInput()
         {
@@ -35,6 +61,17 @@ namespace WebAppSecurity
                     lb_finalmsg.Text = "Email/Password is wrong!";
                     lb_finalmsg.ForeColor = Color.Red;
                     error += 1;
+                }
+                else
+                {
+                    // check database (email must be unique)
+                    int result = CheckEmail(tb_email.Text.Trim());
+                    if (result != 0)
+                    {
+                        error += 1;
+                        lb_finalmsg.Text += "Email not exist! Try another.";
+                        lb_finalmsg.ForeColor = Color.Red;
+                    }
                 }
                 // validate password
                 if (tb_pwd.Text == "")
@@ -322,8 +359,9 @@ namespace WebAppSecurity
                 }
                 return result;
             }
-            catch { lb_finalmsg.Text = "Error in google captcha"; }
-            return false;
+            catch { lb_finalmsg.Text = "Error in google captcha";
+                return false;
+            }
         }
 
 
