@@ -9,6 +9,11 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Timers;
+using System.Net;
+using System.IO;
+using System.Web.Script.Serialization;
+using Newtonsoft.Json;
 
 namespace WebAppSecurity
 {
@@ -81,13 +86,16 @@ namespace WebAppSecurity
             }
         }
 
+        // event click
         protected void LoginClick(object sender, EventArgs e)
         {
-            bool validate = ValidateInput();
-            if (validate == true)
+            // validate
+            bool validateC = validateCaptcha();
+            bool validateI = ValidateInput();
+            if (validateI == true && validateC == true)
             {
-                string email = tb_email.Text;
-                string pwd = tb_pwd.Text;
+                string email = HttpUtility.HtmlEncode(tb_email.Text);
+                string pwd = HttpUtility.HtmlEncode(tb_pwd.Text);
                 SHA512Managed hashing = new SHA512Managed();
                 string dbHash = getDBHash(email);
                 string dbSalt = getDBSalt(email);
@@ -109,6 +117,7 @@ namespace WebAppSecurity
                             }
                             else
                             {
+                                
                                 // session
                                 Session["LoggedIn"] = tb_email.Text.ToString();
                                 // cookie
@@ -148,9 +157,19 @@ namespace WebAppSecurity
                 }
                 finally { }
             }
+            else
+            {
+                if (validateC != true)
+                    lb_finalmsg.Text = "Recaptcha might be wrong";
+                else
+                {
+                    lb_finalmsg.Text = "Recaptcha correct";
+                }
+            }
             
         }
 
+        // get log from database
         protected int getDBLogged(string email)
         {
             int getLogged = 0;
@@ -186,6 +205,7 @@ namespace WebAppSecurity
             return getLogged;
         }
 
+        // get hash from database
         protected string getDBHash(string email)
         {
             string UserconDB = System.Configuration.
@@ -220,7 +240,7 @@ namespace WebAppSecurity
 
 
 
-
+        // get salt from database
         protected string getDBSalt(string email)
         {
             string UserconDB = System.Configuration.
@@ -260,6 +280,54 @@ namespace WebAppSecurity
         }
 
 
+
+
+        // captcha v3
+        // Site client key -->> 6LfpPkgaAAAAAM-Is4yw2dLLGS6lOdsBMwNLSB-G
+        // Secret server key -->> 6LfpPkgaAAAAAPA-xeHYSjW6iQQ5MXD_LoxvHr9H
+        public class CaptchaResponse
+        {
+            public bool Success { get; set; }
+            public double Score { get; set; }
+            public string Action { get; set; }
+            public string Hostname { get; set; }
+            [JsonProperty(PropertyName = "error-code")]
+            public IEnumerable<string> ErrorCodes { get; set; }
+            [JsonProperty(PropertyName = "challenge_ts")]
+            public DateTime ChallengeTime { get; set; }
+        }
+        public bool validateCaptcha()
+        {
+            bool result;
+
+            string captchaResponse = Request.Form["g-recaptcha-response"];
+
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create
+                ("https://www.google.com/recaptcha/api/siteverify?secret=6LfpPkgaAAAAAPA-xeHYSjW6iQQ5MXD_LoxvHr9H &response=" + captchaResponse);
+            try
+            {
+                using (WebResponse wResponse = req.GetResponse())
+                {
+                    using (StreamReader readStream = new StreamReader(wResponse.GetResponseStream()))
+                    {
+                        string jsonResponse = readStream.ReadToEnd();
+
+                        lb_gscore.Text = jsonResponse.ToString();
+
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+
+                        CaptchaResponse jsonObject = js.Deserialize<CaptchaResponse>(jsonResponse);
+
+                        result = Convert.ToBoolean(jsonObject.Success);
+                    }
+                }
+                return result;
+            }
+            catch (WebException ex)
+            {
+                throw ex;
+            }
+        }
 
 
     }

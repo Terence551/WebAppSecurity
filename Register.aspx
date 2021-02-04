@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Register.aspx.cs" Inherits="WebAppSecurity.Register" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Register.aspx.cs" Inherits="WebAppSecurity.Register" ValidateRequest="true" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <script type="text/javascript">
         function finalCheck() {
@@ -201,13 +201,26 @@
                 </tr>
                 <tr>
                    <td>
-                       <asp:Label runat="server" Text="Date of Birth(DD/MM/YYYY)"></asp:Label>
+                       <asp:Label runat="server" Text="Date of Birth"></asp:Label>
                    </td>
                     <td>
                         <asp:TextBox 
                             ID="tb_dob" 
                             runat="server" 
-                            OnInput="javascript:finalCheck()"></asp:TextBox>
+                            Enabled="false" Width="128px"></asp:TextBox>
+                        <i id="calenderBtn" runat="server" class="glyphicon glyphicon-calendar" onserverclick="calendarCall"></i>
+                        <asp:Calendar
+                            OnDayRender="calendar_render"
+                            OnSelectionChanged="calendar_select"
+                            ID="calendar" runat="server" Height="250px" Width="330px" BackColor="White" BorderColor="Black" BorderStyle="Solid" CellSpacing="1" Font-Names="Verdana" Font-Size="9pt" ForeColor="Black" NextPrevFormat="ShortMonth">
+                            <DayHeaderStyle Font-Bold="True" Font-Size="8pt" ForeColor="#333333" Height="8pt" />
+                            <DayStyle BackColor="#CCCCCC" />
+                            <NextPrevStyle Font-Bold="True" Font-Size="8pt" ForeColor="White" />
+                            <OtherMonthDayStyle ForeColor="#999999"/>
+                            <SelectedDayStyle BackColor="#333399" ForeColor="White" />
+                            <TitleStyle BackColor="#333399" BorderStyle="Solid" Font-Bold="True" Font-Size="12pt" ForeColor="White" Height="12pt" />
+                            <TodayDayStyle BackColor="#999999" ForeColor="White" />
+                        </asp:Calendar>
                         <p><asp:Label 
                             ID="lb_dob" 
                             runat="server" 

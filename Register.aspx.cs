@@ -26,8 +26,36 @@ namespace WebAppSecurity
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            calendar.Visible = false;
         }
+        // calendarBtn
+        protected void calendarCall(object sender, EventArgs e)
+        {
+            if (calendar.Visible)
+            {
+                calendar.Visible = false;
+            }
+            else
+            {
+                calendar.Visible = true;
+            }
+            calendar.Attributes.Add("style", "position:absolute");
+        }
+        // calendar_Select
+        protected void calendar_select(object sender, EventArgs e)
+        {
+            tb_dob.Text = calendar.SelectedDate.ToString("dd/MM/yyyy");
+            calendar.Visible = false;
+        }
+        // calendar_render
+        protected void calendar_render(object sender, DayRenderEventArgs e)
+        {
+            if (e.Day.IsOtherMonth)
+            {
+                e.Day.IsSelectable = false;
+            }
+        }
+
         // email must be unique
         public int CheckEmail(string email)
         {

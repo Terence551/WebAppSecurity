@@ -87,6 +87,24 @@ namespace WebAppSecurity
         protected global::System.Web.UI.WebControls.TextBox tb_dob;
 
         /// <summary>
+        /// calenderBtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl calenderBtn;
+
+        /// <summary>
+        /// calendar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Calendar calendar;
+
+        /// <summary>
         /// lb_dob control.
         /// </summary>
         /// <remarks>

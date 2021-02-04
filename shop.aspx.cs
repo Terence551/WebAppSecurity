@@ -20,6 +20,7 @@ namespace WebAppSecurity
                 else
                 {
                     labelLogged.Visible = true;
+                    @out.Visible = true;
                 }
             }
             else

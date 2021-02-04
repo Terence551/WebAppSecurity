@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="WebAppSecurity.Login" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="WebAppSecurity.Login" ValidateRequest="true" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <script type="text/javascript">
         // visible password
@@ -72,5 +72,8 @@
                 <span class="nodeco w3-right w3-margin-left">LOGIN</span>
             </a>
         </div>
+        
+        <asp:Label runat="server" ID="lb_gscore" ForeColor="Blue" Text="" ></asp:Label>
+        <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"/>
     </div>
 </asp:Content>
