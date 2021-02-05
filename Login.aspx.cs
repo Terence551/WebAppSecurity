@@ -319,8 +319,8 @@ namespace WebAppSecurity
 
 
         // captcha v3
-        // Site client key -->> 6LfpPkgaAAAAAM-Is4yw2dLLGS6lOdsBMwNLSB-G
-        // Secret server key -->> 6LfpPkgaAAAAAPA-xeHYSjW6iQQ5MXD_LoxvHr9H
+        //SITEKEY
+        //SECRETKEY
         public class CaptchaResponse
         {
             public bool Success { get; set; }
@@ -339,7 +339,7 @@ namespace WebAppSecurity
             string captchaResponse = Request.Form["g-recaptcha-response"];
 
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create
-                ("https://www.google.com/recaptcha/api/siteverify?secret=6LfpPkgaAAAAAPA-xeHYSjW6iQQ5MXD_LoxvHr9H &response=" + captchaResponse);
+                ("https://www.google.com/recaptcha/api/siteverify?secret=SECRETKEY &response=" + captchaResponse);
             try
             {
                 using (WebResponse wResponse = req.GetResponse())

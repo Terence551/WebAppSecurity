@@ -18,13 +18,13 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <!--font awesome css-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <script src="https://www.google.com/recaptcha/api.js?render=6LfpPkgaAAAAAM-Is4yw2dLLGS6lOdsBMwNLSB-G"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=SITEKEY"></script>
 </head>
 <body>
     <form runat="server">
         <script>
             grecaptcha.ready(function () {
-                grecaptcha.execute('6LfpPkgaAAAAAM-Is4yw2dLLGS6lOdsBMwNLSB-G', { action: 'Login' }).then(function (token) {
+                grecaptcha.execute('SITEKEY', { action: 'Login' }).then(function (token) {
                     document.getElementById("g-recaptcha-response").value = token;
                 });
             });
